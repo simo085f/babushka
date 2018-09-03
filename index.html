@@ -6,18 +6,37 @@
     <title></title>
 
     <style>
+
+body{
+            background-color:rgb(240,240,240);
+        }
+        article{
+            padding: 1em;
+            background-color:white;
+        }
+        .data-container article img{
+            width:100%;
+        }
         .data-container{
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 10px;
+            margin: 0 auto;
+            display:grid;
+        }
+       @media screen and (min-width:580px){
+            .data-container{
+                padding-left:10%;
+                padding-right:10%;
+                grid-gap: 5px;
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
-        .data{
-            background-color: paleturquoise;
-
+        article:nth-child(odd){
+            background-color: antiquewhite;
         }
 
-        .data-template{
+        header{
+        padding-left:10%;
+                padding-right:10%;
 
         }
 
@@ -26,27 +45,43 @@
 </head>
 
 <body>
+    <header>
+    <h1></h1>
+        <nav>
+        <button class="menu-item" data-kategori="alle">Alle</button>
+        <button class="menu-item" data-kategori="forretter">Forretter</button>
+        <button class="menu-item" data-kategori="hovedretter">Hovedretter</button>
+        <button class="menu-item" data-kategori="desserter">Desserter</button>
+        <button class="menu-item" data-kategori="drikkevarer">Drikkevarer</button>
+
+        </nav>
+
+    </header>
        <section class="data-container"></section>
 
     <template class="data-template">
         <article>
+            <img src="" alt="">
+            <!--<div class="data data-navn"></div><br>-->
+            <h2></h2>
             <div class="data data-id"></div>
             <div class="data data-kategori"></div>
-            <div class="data data-navn"></div>
+            <div class="data data-kortbeskrivelse"></div><br>
             <div class="data data-pris"></div>
-            <div class="data data-kortbeskrivelse"></div>
             <div class="data data-langbeskrivelse"></div>
             <div class="data data-oprindelsesregion"></div>
-     <img src="" alt="">
+
         </article>
 
 
     </template>
 
     <script>
+        let retter;
+        let modtager = document.querySelector(".data-container"), kategoriFilter="alle"; //filter variabel
     document.addEventListener("DOMContentLoaded", hentJson);
 
-        let retter;
+
 
         async function hentJson(){
             let myJson = await fetch("json/menu.json");
@@ -55,21 +90,32 @@
 
             visRetter();
         }
+           document.querySelectorAll(".menu-item").forEach(knap =>{
+           knap.addEventListener("click", filtrering)
+       });
+
+           function filtrering(){
+           modtager.textContent = "";
+           kategoriFilter=this.getAttribute("data-kategori");
+            visRetter();
+       }
 
         function visRetter(){
-            let modtager = document.querySelector(".data-container");
-            let temp = document.querySelector(".data-template");
 
+            let temp = document.querySelector(".data-template");
+            document.querySelector("header h1").textContent = kategoriFilter;
             //løb json filen igennem og lav en klon
 
             retter.forEach(ret =>{
+                if(ret.kategori==kategoriFilter || kategoriFilter=="alle"){
                 let klon =temp.cloneNode(true).content;
+
                 //indsæt data
 
-                klon.querySelector(".data-id").textContent = ret.id;
-                klon.querySelector(".data-kategori").textContent = ret.kategori;
-                klon.querySelector(".data-navn").textContent = ret.navn;
-                klon.querySelector(".data-pris").textContent = ret.pris;
+               // klon.querySelector(".data-id").textContent = ret.id;
+                //klon.querySelector(".data-kategori").textContent = ret.kategori;
+                klon.querySelector("h2").textContent = ret.navn;
+                klon.querySelector(".data-pris").textContent = "Pris:" + ret.pris +",-";
                 klon.querySelector(".data-kortbeskrivelse").textContent = ret.kortbeskrivelse;
                 //klon.querySelector(".data-langbeskrivelse").textContent = ret.langbeskrivelse;
                 //klon.querySelector(".data-oprindelsesregion").textContent = ret.oprindelsesregion;
@@ -77,6 +123,7 @@
 
                 // placer klon i html
                 modtager.appendChild(klon);
+                    }
             })
         }
 
