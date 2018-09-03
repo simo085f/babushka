@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <style>
+        .data-container{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+        }
+
+        .data{
+            background-color: paleturquoise;
+
+        }
+
+        .data-template{
+
+        }
+
+
+    </style>
+</head>
+
+<body>
+       <section class="data-container"></section>
+
+    <template class="data-template">
+        <article>
+            <div class="data data-id"></div>
+            <div class="data data-kategori"></div>
+            <div class="data data-navn"></div>
+            <div class="data data-pris"></div>
+            <div class="data data-kortbeskrivelse"></div>
+            <div class="data data-langbeskrivelse"></div>
+            <div class="data data-oprindelsesregion"></div>
+     <img src="" alt="">
+        </article>
+
+
+    </template>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", hentJson);
+
+        let retter;
+
+        async function hentJson(){
+            let myJson = await fetch("json/menu.json");
+            retter = await myJson.json();
+            console.log(retter);
+
+            visRetter();
+        }
+
+        function visRetter(){
+            let modtager = document.querySelector(".data-container");
+            let temp = document.querySelector(".data-template");
+
+            //løb json filen igennem og lav en klon
+
+            retter.forEach(ret =>{
+                let klon =temp.cloneNode(true).content;
+                //indsæt data
+
+                klon.querySelector(".data-id").textContent = ret.id;
+                klon.querySelector(".data-kategori").textContent = ret.kategori;
+                klon.querySelector(".data-navn").textContent = ret.navn;
+                klon.querySelector(".data-pris").textContent = ret.pris;
+                klon.querySelector(".data-kortbeskrivelse").textContent = ret.kortbeskrivelse;
+                //klon.querySelector(".data-langbeskrivelse").textContent = ret.langbeskrivelse;
+                //klon.querySelector(".data-oprindelsesregion").textContent = ret.oprindelsesregion;
+               klon.querySelector("img").src = "imgs/small/" + ret.billede + "-sm.jpg";
+
+                // placer klon i html
+                modtager.appendChild(klon);
+            })
+        }
+
+    </script>
+
+</body>
+</html>
