@@ -9,6 +9,8 @@
 
 body{
             background-color:rgb(240,240,240);
+
+
         }
         article{
             padding: 1em;
@@ -37,7 +39,25 @@ body{
         header{
         padding-left:10%;
                 padding-right:10%;
+            text-align: center;
 
+        }
+         button{
+            background-color: white;
+            margin: 0;
+            padding-left: 2vh;
+            padding-right: 2vh;
+            padding-bottom: 1vh;
+            padding-top: 1vh;
+            font-weight:500;
+            opacity: 1;
+
+        }
+
+        button:hover{
+            background-color: antiquewhite;
+            opacity: 2;
+            transition: 1s;
         }
 
 
@@ -45,24 +65,35 @@ body{
 </head>
 
 <body>
+      <section id="modal">
+    <div id="modal-content">
+        <h2 class="modal-navn"></h2>
+        <img class="modal-billede" src="" alt="">
+        </div>
+
+
+    </section>
     <header>
-    <h1></h1>
+
         <nav>
         <button class="menu-item" data-kategori="alle">Alle</button>
         <button class="menu-item" data-kategori="forretter">Forretter</button>
         <button class="menu-item" data-kategori="hovedretter">Hovedretter</button>
         <button class="menu-item" data-kategori="desserter">Desserter</button>
         <button class="menu-item" data-kategori="drikkevarer">Drikkevarer</button>
-
+        <button class="menu-item" data-kategori="sideorders">Sideorders</button>
+ <h1></h1>
         </nav>
 
     </header>
+       <main class="container">
        <section class="data-container"></section>
+    </main>
 
     <template class="data-template">
         <article>
             <img src="" alt="">
-            <!--<div class="data data-navn"></div><br>-->
+
             <h2></h2>
             <div class="data data-id"></div>
             <div class="data data-kategori"></div>
@@ -78,7 +109,7 @@ body{
 
     <script>
         let retter;
-        let modtager = document.querySelector(".data-container"), kategoriFilter="alle"; //filter variabel
+        let dest = document.querySelector(".data-container"), kategoriFilter="alle"; //filter variabel
     document.addEventListener("DOMContentLoaded", hentJson);
 
 
@@ -95,7 +126,7 @@ body{
        });
 
            function filtrering(){
-           modtager.textContent = "";
+           dest.textContent = "";
            kategoriFilter=this.getAttribute("data-kategori");
             visRetter();
        }
@@ -105,27 +136,42 @@ body{
             let temp = document.querySelector(".data-template");
             document.querySelector("header h1").textContent = kategoriFilter;
             //løb json filen igennem og lav en klon
+            retter.forEach(mad =>{
+              if(mad.kategori==kategoriFilter || kategoriFilter=="alle"){
+                  let klon=temp.cloneNode(true).content;
 
-            retter.forEach(ret =>{
-                if(ret.kategori==kategoriFilter || kategoriFilter=="alle"){
-                let klon =temp.cloneNode(true).content;
+
+
+
+
 
                 //indsæt data
 
-               // klon.querySelector(".data-id").textContent = ret.id;
-                //klon.querySelector(".data-kategori").textContent = ret.kategori;
-                klon.querySelector("h2").textContent = ret.navn;
-                klon.querySelector(".data-pris").textContent = "Pris:" + ret.pris +",-";
-                klon.querySelector(".data-kortbeskrivelse").textContent = ret.kortbeskrivelse;
-                //klon.querySelector(".data-langbeskrivelse").textContent = ret.langbeskrivelse;
-                //klon.querySelector(".data-oprindelsesregion").textContent = ret.oprindelsesregion;
-               klon.querySelector("img").src = "imgs/small/" + ret.billede + "-sm.jpg";
+                //klon.querySelector(".data-id").textContent = mad.id;
+                //klon.querySelector(".data-kategori").textContent = mad.kategori;
+                klon.querySelector("h2").textContent = mad.navn;
+                klon.querySelector(".data-pris").textContent = "Pris:" + mad.pris +",-";
+                klon.querySelector(".data-kortbeskrivelse").textContent = mad.kortbeskrivelse;
+                //klon.querySelector(".data-langbeskrivelse").textContent = mad.langbeskrivelse;
+                //klon.querySelector(".data-oprindelsesregion").textContent = mad.oprindelsesregion;
+               klon.querySelector("img").src = "imgs/small/" + mad.billede + "-sm.jpg";
+                    klon.querySelector("img").addEventListener("click", () =>{
+                       window.location.href = "single.html?id=" + mad.id;
+                  });
+                    klon.querySelector("img").addEventListener("click",()=>{
+                    visModal(mad);
+                   });
 
                 // placer klon i html
-                modtager.appendChild(klon);
-                    }
+                dest.appendChild(klon);
+
+
+          }
             })
+
         }
+
+
 
     </script>
 
